@@ -1,5 +1,15 @@
 import { Router } from 'express'
-import { producto } from '../index'
+// import { producto } from '../index'
+import { normalize, schema } from 'normalizr';
+import { producto, mensaje, io} from './../index'
+
+
+const userSchema = new schema.Entity('authors')
+
+const messegesSchema = new schema.Entity('messages', {
+  author: userSchema
+})
+
 const router = Router()
 
 router.get('/productos/vista-test', (req, res) => {
@@ -40,6 +50,15 @@ router.delete('/productos/:id', async (req, res) => {
   try {
     res.status(200).json(await producto.delete(+req.params.id))
   } catch (err) { return res.status(500).json({ error: err.message || 'Error'})}
+})
+
+router.get('/rutaMensajes', async ( req, res) => {
+  try {
+    let mensajes = { mensajes: {}}
+    mensajes.mensajes = await mensaje.getAll()
+    let listaMensajesNormal = normalize(mensajes.mensajes, [messegesSchema])
+    res.status(200).json({mensajes: listaMensajesNormal })
+  } catch ( err ) { return res.status(500).json({ err: err.message} || 'Error' )}
 })
 
 

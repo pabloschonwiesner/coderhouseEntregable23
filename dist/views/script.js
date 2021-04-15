@@ -3,10 +3,17 @@ let title = document.querySelector('#title')
 let price = document.querySelector('#price')
 let thumbnail = document.querySelector('#thumbnail')
 let tbody = document.querySelector('tbody')
+let table = document.querySelector('table')
 
 let chat = document.querySelector('#chat')
 let email = document.querySelector('#email')
 let message = document.querySelector('#message')
+let nombre = document.querySelector('#nombre')
+let apellido = document.querySelector('#apellido')
+let edad = document.querySelector('#edad')
+let alias = document.querySelector('#alias')
+let avatar = document.querySelector('#avatar')
+
 let enviarMensaje = document.querySelector('#enviarMensaje')
 let lista = document.querySelector('#lista')
 
@@ -23,8 +30,15 @@ function sendData (event) {
 function sendMessage (event) {
   event.preventDefault()
   socket.emit('message', {
-    email: email.value,
-    mensaje: message.value
+    author: {
+      email: email.value,
+      nombre: nombre.value,
+      apellido: apellido.value,
+      edad: edad.value,
+      alias: alias.value,
+      avatar: avatar.value
+    },
+    text: message.value
   })
   message.value = ''
 }
@@ -84,16 +98,17 @@ function validarEmail() {
 }
 
 function crearMensaje ( mensaje ) {
+
+  console.log(mensaje)
   let li = document.createElement('li')
   let spanEmail = document.createElement('span')
   let spanFechaHora = document.createElement('span')
   let spanMensaje = document.createElement('span')
-
-  spanEmail.innerText = mensaje.email
+  spanEmail.innerText = mensaje.author.email
   spanEmail.className = 'emailStyle'
-  spanFechaHora.innerText = mensaje.fechaHora
-  spanFechaHora.className = 'fechaHoraStyle'
-  spanMensaje.innerText = mensaje.mensaje
+  // spanFechaHora.innerText = mensaje.author.fechaHora
+  // spanFechaHora.className = 'fechaHoraStyle'
+  spanMensaje.innerText = mensaje.text
   spanMensaje.className = 'mensajeStyle'
 
   li.appendChild(spanEmail)
@@ -118,6 +133,9 @@ socket.on('connect', () => {
   
   socket.on('productos', (data) => {
     let productos = JSON.parse(data)
+    table.removeChild(tbody)
+    let tbodyNuevo = document.createElement('tbody')
+    table.append(tbodyNuevo)
     productos.forEach( producto => crearRegistroTabla(producto))
   })
 
@@ -126,7 +144,15 @@ socket.on('connect', () => {
   })
 
   socket.on('message', (data) => {
+    console.log(data)
     crearMensaje(data)
+  })
+
+  socket.on('todosLosMensajes', (data) => {
+    let mensajes = JSON.parse(data)
+    console.log({mensajes})
+    
+    // crearMensaje(data)
   })
 })
 

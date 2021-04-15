@@ -1,4 +1,11 @@
+import { normalize, schema } from 'normalizr';
 import { producto, mensaje, io} from './../index'
+
+const userSchema = new schema.Entity('authors')
+
+const messegesSchema = new schema.Entity('messages', {
+  author: userSchema
+})
 
 io.on('connection', (client: any) => {
   console.log('cliente conectado')
@@ -14,7 +21,8 @@ io.on('connection', (client: any) => {
 
   client.on('message', async (data: any) => {
     let mensajeAgregado = await mensaje.add(data)
-    io.sockets.emit('message', mensajeAgregado)
+    let mensajeAgregadoNormal = normalize(mensajeAgregado, messegesSchema)
+    io.sockets.emit('message', mensajeAgregadoNormal)
   })
 
   async function emitirListaProductos() {
@@ -22,5 +30,14 @@ io.on('connection', (client: any) => {
     client.emit('productos', listaProductos)
   }
 
+  async function emitirListaMensajes() {
+    let mensajes = { mensajes: {}}
+    mensajes.mensajes = await mensaje.getAll()
+    console.log(mensajes.mensajes)
+    let listaMensajesNormal = normalize(mensajes.mensajes, [messegesSchema])
+    client.emit('todosLosMensajes', JSON.stringify(listaMensajesNormal))
+  }
+
   emitirListaProductos()
+  emitirListaMensajes()
 })
