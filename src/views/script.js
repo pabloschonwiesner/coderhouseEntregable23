@@ -31,7 +31,7 @@ function sendMessage (event) {
   event.preventDefault()
   socket.emit('message', {
     author: {
-      id: email.value,
+      email: email.value,
       nombre: nombre.value,
       apellido: apellido.value,
       edad: edad.value,
@@ -104,7 +104,7 @@ function crearMensaje ( mensaje ) {
   let spanEmail = document.createElement('span')
   let spanFechaHora = document.createElement('span')
   let spanMensaje = document.createElement('span')
-  spanEmail.innerText = mensaje.author.id
+  spanEmail.innerText = mensaje.author.email
   spanEmail.className = 'emailStyle'
   // spanFechaHora.innerText = mensaje.author.fechaHora
   // spanFechaHora.className = 'fechaHoraStyle'

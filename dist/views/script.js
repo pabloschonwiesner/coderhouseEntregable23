@@ -132,10 +132,8 @@ socket.on('connect', () => {
   })
   
   socket.on('productos', (data) => {
+    tbody.innerHTML = ''
     let productos = JSON.parse(data)
-    table.removeChild(tbody)
-    let tbodyNuevo = document.createElement('tbody')
-    table.append(tbodyNuevo)
     productos.forEach( producto => crearRegistroTabla(producto))
   })
 

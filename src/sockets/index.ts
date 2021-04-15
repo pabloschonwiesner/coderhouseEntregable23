@@ -1,11 +1,15 @@
 import { normalize, schema } from 'normalizr';
 import { producto, mensaje, io} from './../index'
 
-const userSchema = new schema.Entity('authors')
 
-const messegesSchema = new schema.Entity('messages', {
+const userSchema = new schema.Entity('author', undefined, {idAttribute: 'email'})
+
+const messagesSchema = new schema.Entity('messages', {
   author: userSchema
-})
+  
+}, { idAttribute: '_id'})
+
+const messageListSchema = new schema.Array(messagesSchema)
 
 io.on('connection', (client: any) => {
   console.log('cliente conectado')
@@ -21,7 +25,7 @@ io.on('connection', (client: any) => {
 
   client.on('message', async (data: any) => {
     let mensajeAgregado = await mensaje.add(data)
-    let mensajeAgregadoNormal = normalize(mensajeAgregado, messegesSchema)
+    let mensajeAgregadoNormal = normalize(mensajeAgregado, messagesSchema)
     io.sockets.emit('message', mensajeAgregadoNormal)
   })
 
@@ -31,10 +35,14 @@ io.on('connection', (client: any) => {
   }
 
   async function emitirListaMensajes() {
-    let mensajes = { mensajes: {}}
-    mensajes.mensajes = await mensaje.getAll()
-    console.log(mensajes.mensajes)
-    let listaMensajesNormal = normalize(mensajes.mensajes, [messegesSchema])
+    let listaMensajesNormal = {}
+    let  mensajes = await mensaje.getAll()
+    console.log(mensajes)
+    if( mensajes.length > 0) {
+      listaMensajesNormal = normalize(mensajes, messageListSchema)
+    }
+
+    console.log('-------------', listaMensajesNormal)
     client.emit('todosLosMensajes', JSON.stringify(listaMensajesNormal))
   }
 

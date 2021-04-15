@@ -5,7 +5,7 @@ let Schema = mongoose.Schema;
 
 let mensajeSchema = new Schema({
   author: {
-    id: String,
+    email: String,
     nombre: String,
     apellido: String,
     edad: Number,
@@ -15,4 +15,4 @@ let mensajeSchema = new Schema({
   text: String
 })
 
-export default mongoose.model('Mensaje', mensajeSchema)
+export default mongoose.model('Mensajes', mensajeSchema)

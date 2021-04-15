@@ -11,7 +11,7 @@ class MensajeBD {
     
     let nuevoMensaje = new Mensaje( { 
       author: {
-        id: mensaje.author.id,
+        email: mensaje.author.email,
         nombre: mensaje.author.nombre,
         apellido: mensaje.author.apellido,
         edad: mensaje.author.edad,
