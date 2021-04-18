@@ -1,4 +1,4 @@
-import Mensaje from './Mensaje'
+const Mensaje = require('./Mensaje')
 
 class MensajeBD {
   
@@ -7,7 +7,7 @@ class MensajeBD {
     return Mensaje.find();
   }
 
-  async add ( mensaje: any ) {
+  async add ( mensaje ) {
     
     let nuevoMensaje = new Mensaje( { 
       author: {
@@ -25,4 +25,4 @@ class MensajeBD {
 }
 
 
-export default MensajeBD
+module.exports = MensajeBD

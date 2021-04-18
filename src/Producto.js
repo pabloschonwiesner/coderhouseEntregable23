@@ -11,4 +11,4 @@ let productoSchema = new Schema({
 
 
 productoSchema.plugin(AutoIncrement, {inc_field: 'id'});
-export default mongoose.model('Producto', productoSchema)
+module.exports = mongoose.model('Producto', productoSchema)

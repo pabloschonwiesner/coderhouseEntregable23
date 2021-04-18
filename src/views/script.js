@@ -13,6 +13,7 @@ let apellido = document.querySelector('#apellido')
 let edad = document.querySelector('#edad')
 let alias = document.querySelector('#alias')
 let avatar = document.querySelector('#avatar')
+let usuario = document.querySelector('#usuario')
 
 let enviarMensaje = document.querySelector('#enviarMensaje')
 let lista = document.querySelector('#lista')
@@ -21,6 +22,15 @@ let lista = document.querySelector('#lista')
 form.addEventListener('submit', sendData)
 email.addEventListener('input', validarEmail)
 enviarMensaje.addEventListener('click', sendMessage)
+
+let cookies = document.cookie.split(';')
+let nombreUsuario = ''
+for(let i in cookies) {
+  let index = cookies[i].search('usuario')
+  let indexString = cookies[index].indexOf('=')
+  nombreUsuario = cookies[i].substring(indexString + 1, cookies[i].length)
+}
+usuario.innerText = `Bienvenido ${nombreUsuario}`
 
 function sendData (event) {
   event.preventDefault()

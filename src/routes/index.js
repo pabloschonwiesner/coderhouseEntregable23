@@ -1,14 +1,7 @@
-import { Router } from 'express'
-// import { producto } from '../index'
-import { normalize, schema } from 'normalizr';
-import { producto, mensaje, io} from './../index'
+const { Router } = require('express')
+const path = require('path')
 
-
-const userSchema = new schema.Entity('authors')
-
-const messegesSchema = new schema.Entity('messages', {
-  author: userSchema
-})
+const { producto } = require('../index')
 
 const router = Router()
 
@@ -52,16 +45,23 @@ router.delete('/productos/:id', async (req, res) => {
   } catch (err) { return res.status(500).json({ error: err.message || 'Error'})}
 })
 
-router.get('/rutaMensajes', async ( req, res) => {
-  try {
-    let mensajes = { mensajes: {}}
-    mensajes.mensajes = await mensaje.getAll()
-    let listaMensajesNormal = normalize(mensajes.mensajes, [messegesSchema])
-    res.status(200).json({mensajes: listaMensajesNormal })
-  } catch ( err ) { return res.status(500).json({ err: err.message} || 'Error' )}
+
+router.post('/login', (req, res) => {
+  req.session.usuario = req.body.usuario
+  res.cookie('usuario', req.session.usuario)
+  res.redirect('/')
+  
+})
+
+router.get('/cerrarSesion', (req, res) => {
+  req.session.destroy( err => {
+    if(err) console.log(err)
+    res.redirect('/deslogueo.html')
+  })
+  
 })
 
 
 
 
-export default router
+module.exports = router

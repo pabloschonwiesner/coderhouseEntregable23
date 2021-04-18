@@ -16,3 +16,4 @@ li { list-style: none; font-size: 0.7rem;}
 .emailStyle { font-weight: bold; color: blue; margin-right: 15px; }
 .fechaHoraStyle { color: brown; margin-right: 15px; }
 .mensajeStyle { color: green; font-style: italic;}
+.session { background-color:#cff4fc; color: black; font-size: 24px; padding: 20px}

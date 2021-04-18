@@ -1,5 +1,5 @@
-import faker from 'faker'
-import Producto from './Producto'
+const faker = require('faker')
+const Producto = require('./Producto')
 
 faker.locale = 'es'
 
@@ -18,27 +18,27 @@ class ProductoBD {
     return prod;
   }
 
-  async getOne ( id: number ) {
+  async getOne ( id ) {
     return await Producto.findOne({ id })
     
   }
 
-  async add ( producto: any ) {
+  async add ( producto ) {
     console.log(producto)
     let nuevoProducto = new Producto( { title: producto.title, price: producto.price, thumbnail: producto.thumbnail })
     return await nuevoProducto.save() 
   }
 
-  async update ( producto: any) {
+  async update ( producto) {
     return await Producto.updateOne( { id: producto.id }, { title: producto.title, price: producto.price, thumbnail: producto.thumbnail })
     
   }
 
-  async delete ( id: number) {
+  async delete ( id) {
     return await Producto.deleteOne( {id })
   }
 
-  getMocksProductos ( cantidad: Number ) {
+  getMocksProductos ( cantidad ) {
     let productos = []
     
     if(cantidad == 0) {
@@ -63,4 +63,4 @@ class ProductoBD {
 }
 
 
-export default ProductoBD
+module.exports = ProductoBD
